@@ -7,17 +7,17 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 
-def menu_categorias():
+def menu_plataformas():
     con = get_connection()
 
     # === JANELA PRINCIPAL ===
     janela = ctk.CTk()
-    janela.title("🎮 Gerenciar Categorias")
+    janela.title("🎮 Gerenciar Plataformas")
     janela.geometry("650x500")
 
     titulo = ctk.CTkLabel(
         janela,
-        text="📁 Gerenciar Categorias",
+        text="📁 Gerenciar Plataformas",
         font=("Arial", 20, "bold")
     )
     titulo.pack(pady=15)
@@ -36,20 +36,20 @@ def menu_categorias():
     entry_desc = ctk.CTkEntry(frame_campos, width=300)
     entry_desc.grid(row=1, column=1, pady=5)
 
-    # === LISTA DE CATEGORIAS ===
-    lista_categorias = ctk.CTkTextbox(janela, width=580, height=230)
-    lista_categorias.pack(pady=10)
+    # === LISTA DE PLATAFORMAS ===
+    lista_plataformas = ctk.CTkTextbox(janela, width=580, height=230)
+    lista_plataformas.pack(pady=10)
 
     # === FUNÇÕES CRUD ===
     def atualizar_lista():
         cur = con.cursor()
-        cur.execute("SELECT idcategoria, nome, descricao FROM categoria ORDER BY idcategoria")
-        categorias = cur.fetchall()
-        lista_categorias.delete("1.0", "end")
-        for cat in categorias:
-            lista_categorias.insert("end", f"ID: {cat[0]} | {cat[1]} - {cat[2]}\n")
+        cur.execute("SELECT idplataforma, nome, descricao FROM plataforma ORDER BY idplataforma")
+        plataformas = cur.fetchall()
+        lista_plataformas.delete("1.0", "end")
+        for plat in plataformas:
+            lista_plataformas.insert("end", f"ID: {plat[0]} | {plat[1]} - {plat[2]}\n")
 
-    def cadastrar_categoria():
+    def cadastrar_plataforma():
         nome = entry_nome.get().strip()
         desc = entry_desc.get().strip()
 
@@ -58,22 +58,22 @@ def menu_categorias():
             return
 
         cur = con.cursor()
-        sql = "INSERT INTO categoria (nome, descricao) VALUES (%s, %s)"
+        sql = "INSERT INTO plataforma (nome, descricao) VALUES (%s, %s)"
         cur.execute(sql, (nome, desc))
         con.commit()
 
         atualizar_lista()
         entry_nome.delete(0, "end")
         entry_desc.delete(0, "end")
-        messagebox.showinfo("Sucesso", "✅ Categoria cadastrada com sucesso!")
+        messagebox.showinfo("Sucesso", "✅ Plataforma cadastrada com sucesso!")
 
-    def editar_categoria():
-        selecionado = lista_categorias.get("insert linestart", "insert lineend")
+    def editar_plataforma():
+        selecionado = lista_plataformas.get("insert linestart", "insert lineend")
         if not selecionado.strip():
-            messagebox.showwarning("Aviso", "Selecione uma categoria na lista para editar.")
+            messagebox.showwarning("Aviso", "Selecione uma plataforma na lista para editar.")
             return
 
-        idcategoria = selecionado.split(" | ")[0].replace("ID: ", "")
+        idplataforma = selecionado.split(" | ")[0].replace("ID: ", "")
         novo_nome = entry_nome.get().strip()
         nova_desc = entry_desc.get().strip()
 
@@ -82,41 +82,41 @@ def menu_categorias():
             return
 
         cur = con.cursor()
-        sql = "UPDATE categoria SET nome=%s, descricao=%s WHERE idcategoria=%s"
-        cur.execute(sql, (novo_nome, nova_desc, idcategoria))
+        sql = "UPDATE plataforma SET nome=%s, descricao=%s WHERE idplataforma=%s"
+        cur.execute(sql, (novo_nome, nova_desc, idplataforma))
         con.commit()
 
         atualizar_lista()
         entry_nome.delete(0, "end")
         entry_desc.delete(0, "end")
-        messagebox.showinfo("Sucesso", "✅ Categoria atualizada com sucesso!")
+        messagebox.showinfo("Sucesso", "✅ Plataforma atualizada com sucesso!")
 
-    def excluir_categoria():
-        selecionado = lista_categorias.get("insert linestart", "insert lineend")
+    def excluir_plataforma():
+        selecionado = lista_plataformas.get("insert linestart", "insert lineend")
         if not selecionado.strip():
-            messagebox.showwarning("Aviso", "Selecione uma categoria na lista para excluir.")
+            messagebox.showwarning("Aviso", "Selecione uma plataforma na lista para excluir.")
             return
 
-        idcategoria = selecionado.split(" | ")[0].replace("ID: ", "")
+        idplataforma = selecionado.split(" | ")[0].replace("ID: ", "")
 
-        confirmar = messagebox.askyesno("Confirmação", "Tem certeza que deseja excluir esta categoria?")
+        confirmar = messagebox.askyesno("Confirmação", "Tem certeza que deseja excluir esta plataforma?")
         if not confirmar:
             return
 
         cur = con.cursor()
-        cur.execute("DELETE FROM categoria WHERE idcategoria=%s", (idcategoria,))
+        cur.execute("DELETE FROM plataforma WHERE idplataforma=%s", (idplataforma,))
         con.commit()
 
         atualizar_lista()
-        messagebox.showinfo("Sucesso", "🗑️ Categoria excluída com sucesso!")
+        messagebox.showinfo("Sucesso", "🗑️ Plataforma excluída com sucesso!")
 
     # === BOTÕES ===
     frame_botoes = ctk.CTkFrame(janela)
     frame_botoes.pack(pady=10)
 
-    ctk.CTkButton(frame_botoes, text="Cadastrar", command=cadastrar_categoria).grid(row=0, column=0, padx=10)
-    ctk.CTkButton(frame_botoes, text="Editar", command=editar_categoria).grid(row=0, column=1, padx=10)
-    ctk.CTkButton(frame_botoes, text="Excluir", command=excluir_categoria).grid(row=0, column=2, padx=10)
+    ctk.CTkButton(frame_botoes, text="Cadastrar", command=cadastrar_plataforma).grid(row=0, column=0, padx=10)
+    ctk.CTkButton(frame_botoes, text="Editar", command=editar_plataforma).grid(row=0, column=1, padx=10)
+    ctk.CTkButton(frame_botoes, text="Excluir", command=excluir_plataforma).grid(row=0, column=2, padx=10)
     ctk.CTkButton(frame_botoes, text="Atualizar Lista", command=atualizar_lista).grid(row=0, column=3, padx=10)
 
     # === BOTÃO VOLTAR ===
@@ -130,4 +130,4 @@ def menu_categorias():
 
 # === EXECUÇÃO DIRETA ===
 if __name__ == "__main__":
-    menu_categorias()
+    menu_plataformas()

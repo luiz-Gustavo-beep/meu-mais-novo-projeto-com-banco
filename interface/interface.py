@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from crud_jogos import menu_jogos
 from curd_categoria import menu_categorias
-from crud_plataforma import menu_categorias
+from crud_plataforma import menu_plataformas
 
 # ---------------- Configuração ----------------
 ctk.set_appearance_mode('dark')

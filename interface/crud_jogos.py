@@ -64,7 +64,7 @@ def menu_jogos():
         entry_imagem.delete(0, "end")
 
     def excluir_jogo():
-        selecionado = lista_jogos.get()
+        selecionado = lista_jogos.get("1.0", "end").strip()
         if not selecionado:
             return
 
@@ -79,7 +79,7 @@ def menu_jogos():
         cur = con.cursor()
         cur.execute("SELECT idjogo, titulo, desenvolvedor FROM jogo ORDER BY idjogo")
         jogos = cur.fetchall()
-        lista_jogos.delete(0, "end")
+        lista_jogos.delete("1.0", "end")
         for jogo in jogos:
             lista_jogos.insert("end", f"ID: {jogo[0]} | {jogo[1]} ({jogo[2]})")
 
